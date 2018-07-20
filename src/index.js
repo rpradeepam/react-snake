@@ -1,111 +1,47 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Board } from './board';
 
-class Cell extends React.Component {
-    render() {
-        return (
-            <div className={this.props.snake ? "cell snake" : 'cell'}>
-                {/* TODO */}
-            </div>
-        );
-    }
-}
-
-class Board extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            snake: [[0, 1]]
-        }
-        this.BOARDSIZE = 10;
-
-        setInterval(() => {
-            this.setState(previousState => {
-                let newPos
-                switch (this.props.direction) {
-                    case 'u':
-                        newPos = this.moveUp(previousState.snake[0])
-                        break;
-                    case 'd':
-                        newPos = this.moveDown(previousState.snake[0])
-                        break;
-                    case 'l':
-                        newPos = this.moveLeft(previousState.snake[0])
-                        break;
-                    case 'r':
-                        newPos = this.moveRight(previousState.snake[0])
-                        break;
-
-                    default:
-                        break;
-                }
-
-                return { snake: [newPos] };
-            });
-        }, 1000);
-
-
-    }
-
-    moveUp = ([x, y]) => [this.decrement(x), y];
-    moveDown = ([x, y]) => [this.increment(x), y];
-    moveLeft = ([x, y]) => [x, this.decrement(y)];
-    moveRight = ([x, y]) => [x, this.increment(y)];
-
-    increment = i => (i + 1) % this.BOARDSIZE;
-    decrement = i => (i - 1 + this.BOARDSIZE) % this.BOARDSIZE;
-
-    renderCell(cell) {
-        return <Cell snake={cell} />;
-    }
-
-
-    render() {
-        let board = []
-
-        board = [...Array(this.BOARDSIZE)].map(() => Array(this.BOARDSIZE).fill(0))
-
-        this.state.snake.forEach(cell => {
-            board[cell[0]][cell[1]] = 1;
-        });
-
-        return (
-            <div>
-                {
-                    board.map((row) =>
-                        <div className="board-row">
-                            {row.map((cell) => this.renderCell(cell))}
-                        </div>
-                    )
-                }
-            </div>
-        );
-    }
-}
 
 class Game extends React.Component {
     constructor(props) {
         super(props)
+        this.BOARDSIZE = 40
         this.state = {
-            direction: 'r'
+            direction: 'r',
+            rat: this.placeRat()
         }
+
+    }
+
+    placeRat() {
+        let rnd = () => Math.floor(Math.random() * this.BOARDSIZE);
+        return [rnd(), rnd()]
+    }
+
+    handleEat() {
+        this.setState({ rat: this.placeRat() })
     }
 
     _handleKeyPress(event) {
         let dir;
         switch (event.keyCode) {
             case 37:
-                dir = 'l'
+                if (this.state.direction !== 'r')
+                    dir = 'l'
                 break;
             case 38:
-                dir = 'u'
+                if (this.state.direction !== 'd')
+                    dir = 'u'
                 break;
             case 39:
-                dir = 'r'
+                if (this.state.direction !== 'l')
+                    dir = 'r'
                 break;
             case 40:
-                dir = 'd'
+                if (this.state.direction !== 'u')
+                    dir = 'd'
                 break;
             default:
                 break;
@@ -125,7 +61,7 @@ class Game extends React.Component {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board direction={this.state.direction} />
+                    <Board direction={this.state.direction} size={this.BOARDSIZE} rat={this.state.rat} onEat={this.handleEat.bind(this)} />
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>

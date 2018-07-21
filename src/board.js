@@ -39,7 +39,7 @@ export class Board extends React.Component {
 
                 return { snake: copy };
             });
-        }, 100);
+        }, 200);
 
 
     }

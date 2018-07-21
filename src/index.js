@@ -10,9 +10,10 @@ class Game extends React.Component {
         this.BOARDSIZE = 40
         this.state = {
             direction: 'r',
+            score: 0,
             rat: this.placeRat()
         }
-
+        this.handleEat = this.handleEat.bind(this)
     }
 
     placeRat() {
@@ -21,7 +22,12 @@ class Game extends React.Component {
     }
 
     handleEat() {
-        this.setState({ rat: this.placeRat() })
+        this.setState(previousState => {
+            return {
+                score: ++previousState.score,
+                rat: this.placeRat()
+            }
+        })
     }
 
     _handleKeyPress(event) {
@@ -47,7 +53,6 @@ class Game extends React.Component {
                 break;
         }
         if (dir) {
-            console.log(dir)
             this.setState({ direction: dir })
         }
     }
@@ -58,13 +63,15 @@ class Game extends React.Component {
 
 
     render() {
+        let score = 'Score:' + this.state.score
+
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board direction={this.state.direction} size={this.BOARDSIZE} rat={this.state.rat} onEat={this.handleEat.bind(this)} />
+                    <Board direction={this.state.direction} size={this.BOARDSIZE} rat={this.state.rat} onEat={this.handleEat} />
                 </div>
                 <div className="game-info">
-                    <div>{/* status */}</div>
+                    <div>{score}</div>
                     <ol>{/* TODO */}</ol>
                 </div>
             </div>

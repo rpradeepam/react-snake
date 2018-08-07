@@ -4,6 +4,19 @@ body {
   font-family: sans-serif;
 }
 
+.game-board{
+  margin: 0 auto;
+  width: 80vw;
+  max-width: 60vh;
+  height: 80vw;
+  max-height: 60vh;
+  font-size: 1rem;
+}
+
+.board-row {
+  display: flex;
+}
+
 .board-row:after {
   clear: both;
   content: "";
@@ -14,12 +27,18 @@ body {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  height: 10px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 10px;
+  flex: 1 0 auto;
+}
+
+.cell:after {
+  content: "";
+  float:left;
+  display: block;
+  padding-top: 100%;
 }
 
 .snake{
@@ -28,7 +47,8 @@ body {
 .game {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 .game-info {
-  margin-left: 20px;
+  margin: 20px;
 }

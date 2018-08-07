@@ -44,6 +44,15 @@ body {
 .snake{
   background: #000000
 }
+
+.head{
+  background: #ff0000
+}
+
+.rat{
+  background: #4d4100
+}
+
 .game {
   display: flex;
   flex-direction: row;

@@ -11,9 +11,12 @@ class Game extends React.Component {
         this.state = {
             direction: 'r',
             score: 0,
+            gameOver: false,
             rat: this.placeRat()
         }
         this.handleEat = this.handleEat.bind(this)
+        this.handleCollide = this.handleCollide.bind(this)
+        this._handleReset = this._handleReset.bind(this)
     }
 
     placeRat() {
@@ -22,10 +25,29 @@ class Game extends React.Component {
     }
 
     handleEat() {
+        window.navigator.vibrate(100);
         this.setState(previousState => {
             return {
                 score: ++previousState.score,
                 rat: this.placeRat()
+            }
+        })
+    }
+
+    handleCollide() {
+        window.navigator.vibrate(200);
+        this.setState(previousState => {
+            return {
+                gameOver: true
+            }
+        })
+    }
+
+    _handleReset() {
+        this.setState(previousState => {
+            return {
+                gameOver: false,
+                score: 0
             }
         })
     }
@@ -68,11 +90,16 @@ class Game extends React.Component {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board direction={this.state.direction} size={this.BOARDSIZE} rat={this.state.rat} onEat={this.handleEat} />
+                    <Board direction={this.state.direction}
+                        size={this.BOARDSIZE}
+                        rat={this.state.rat}
+                        gameOver={this.state.gameOver}
+                        onEat={this.handleEat}
+                        onCollide={this.handleCollide} />
                 </div>
                 <div className="game-info">
                     <div>{score}</div>
-                    <ol>{/* TODO */}</ol>
+                    <div><button hidden={!this.state.gameOver} onClick={this._handleReset}>Reset</button></div>
                 </div>
             </div>
         );
